@@ -182,7 +182,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
     </div>
     <div class="check-all-bar">
       <span id="starCountBadge" style="font-size:0.78rem;color:#f59e0b;font-weight:bold;align-self:center;">チェックなし</span>
-      <button class="btn-chk btn-chk-review" onclick="window.location.href='review.html'">⭐ 復習テストへ</button>
+      <button class="btn-chk btn-chk-review" onclick="window.location.href='review.html?t='+Date.now()">⭐ 復習テストへ</button>
       <button class="btn-chk btn-chk-all" onclick="checkAll(true)">全チェック</button>
       <button class="btn-chk btn-chk-none" onclick="checkAll(false)">全解除</button>
     </div>
@@ -328,14 +328,17 @@ const WORDS=[
   {no:50,en:'pencil',kana:'【ペン】スル',pos:'名詞',ja:'鉛筆'}
 ];
 const LS_KEY_PROG='JS_sc05_p', LS_KEY_REVIEW='JS_sc05_r', LS_KEY_STAR='star_JS_sc05';
-const lsGet=k=>{try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}};
-const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
+const lsGet=k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){try{const v=sessionStorage.getItem(k);return v?JSON.parse(v):null;}catch(e2){return null;}}};
+const lsSet=(k,v)=>{const s=JSON.stringify(v);try{localStorage.setItem(k,s);}catch(e){try{sessionStorage.setItem(k,s);}catch(e2){console.warn('storage error',k,e2);}}};
 
 // ===== ★チェック管理 =====
 function getStars(){ return lsGet(LS_KEY_STAR)||{}; }
 function saveStar(en,val){
   const s=getStars(); if(val) s[en]=true; else delete s[en];
   lsSet(LS_KEY_STAR,s);
+  // 保存確認
+  const saved=lsGet(LS_KEY_STAR)||{};
+  console.log('[STAR] key='+LS_KEY_STAR+' en='+en+' val='+val+' saved_count='+Object.keys(saved).length);
   updateStarCount();
 }
 function isStarred(en){ return !!getStars()[en]; }
