@@ -335,10 +335,15 @@ const lsSet=(k,v)=>{const s=JSON.stringify(v);try{localStorage.setItem(k,s);}cat
 function getStars(){ return lsGet(LS_KEY_STAR)||{}; }
 function saveStar(en,val){
   const s=getStars(); if(val) s[en]=true; else delete s[en];
-  lsSet(LS_KEY_STAR,s);
-  // 保存確認
-  const saved=lsGet(LS_KEY_STAR)||{};
-  console.log('[STAR] key='+LS_KEY_STAR+' en='+en+' val='+val+' saved_count='+Object.keys(saved).length);
+  // 直接localStorageに書き込む（lsSetを使わず）
+  try{
+    localStorage.setItem(LS_KEY_STAR, JSON.stringify(s));
+    const verify=JSON.parse(localStorage.getItem(LS_KEY_STAR));
+    console.log('[STAR] saved OK key='+LS_KEY_STAR+' en='+en+' val='+val+' count='+Object.keys(verify||{}).length);
+  }catch(e){
+    console.error('[STAR] localStorage FAILED:', e);
+    try{sessionStorage.setItem(LS_KEY_STAR,JSON.stringify(s));}catch(e2){}
+  }
   updateStarCount();
 }
 function isStarred(en){ return !!getStars()[en]; }
