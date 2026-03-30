@@ -1340,16 +1340,31 @@ function makeSpeakBtn(t){const b=document.createElement('button');b.className='s
 
 // ===== チェック単語取得 =====
 function getStarredWords(){
+  // localStorage全体をスキャンしてstar_で始まるキーを収集
+  const starData={};
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k&&k.startsWith('star_')){
+        try{const v=JSON.parse(localStorage.getItem(k));if(v)starData[k]=v;}catch(e){}
+      }
+    }
+  }catch(e){}
+  // sessionStorageもスキャン
+  try{
+    for(let i=0;i<sessionStorage.length;i++){
+      const k=sessionStorage.key(i);
+      if(k&&k.startsWith('star_')){
+        try{const v=JSON.parse(sessionStorage.getItem(k));if(v)starData[k]=v;}catch(e){}
+      }
+    }
+  }catch(e){}
+  console.log('[REVIEW] star keys found:', Object.keys(starData));
   const result=ALL_WORDS.filter(w=>{
-    const stars=lsGet('star_'+w.lsKey)||{};
-    return !!stars[w.en];
+    const key='star_'+w.lsKey;
+    return !!(starData[key]&&starData[key][w.en]);
   });
   console.log('[REVIEW] starred words count='+result.length);
-  // デバッグ：最初の3件のキーを表示
-  const keys=new Set(ALL_WORDS.map(w=>'star_'+w.lsKey));
-  let found=0;
-  keys.forEach(k=>{const v=lsGet(k);if(v&&Object.keys(v).length>0)found++;});
-  console.log('[REVIEW] keys with stars='+found+'/'+keys.size);
   return result;
 }
 function unstar(w){
