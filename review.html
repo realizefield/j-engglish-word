@@ -353,7 +353,7 @@ function renderListView(words){
     const hd=document.createElement('div');hd.className='cat-sec-hd';
     hd.innerHTML='<span>📖 '+g.cat+' 単元'+g.unit+'</span>';
     const lnk=document.createElement('a');lnk.style.cssText='font-size:0.72rem;color:#f59e0b;cursor:pointer;';
-    lnk.textContent='→ 単元を開く';lnk.onclick=()=>location.href=g.file;hd.appendChild(lnk);
+    lnk.textContent='\u2192 \u5358\u5143\u3092\u958b\u304f';lnk.onclick=()=>location.href=g.file;hd.appendChild(lnk);
     sec.appendChild(hd);
     const tbl=document.createElement('table');tbl.className='wl-table';
     g.words.forEach(w=>{
