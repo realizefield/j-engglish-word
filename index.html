@@ -8154,6 +8154,41 @@ const LS_STREAK   = 'tango_streak';
 const lsGet = k => { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; } };
 const lsSet = (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} };
 
+// ===== 各単元ファイル（JS_xxxxx_p）の進捗を読み込んで統合 =====
+// 各単元ファイル（例: JS_ew01.html）は 'JS_ew01_p' というキーで保存している
+// そこから全カテゴリ・全単元の進捗を集約する
+function loadAllProgress(){
+  const prog = {};
+  // CAT_ABBRは後で定義されるので、直接この関数内でも使えるように
+  const catAbbrs = {
+    '01':'ew','02':'ns','03':'sw','04':'en','05':'an',
+    '06':'sp','07':'fd','08':'sc','09':'hh','10':'fm',
+    '11':'tr','12':'to','13':'jb','14':'adj','15':'adv',
+    '16':'conj','17':'rv','18':'irv','19':'cmp','20':'pro','21':'qw'
+  };
+  // TANGO_DATAから各カテゴリの単元数を取得
+  if (typeof TANGO_DATA !== 'undefined') {
+    TANGO_DATA.forEach(cat => {
+      const abbr = catAbbrs[cat.id] || cat.id;
+      for (let i = 0; i < cat.unitCount; i++) {
+        const unitNum = String(i+1).padStart(2,'0');
+        const key = 'JS_' + abbr + unitNum + '_p';
+        try {
+          const data = JSON.parse(localStorage.getItem(key));
+          if (data && data.cleared) {
+            // index.htmlの期待する形式に変換
+            prog[cat.id + '_' + i] = {
+              cleared: true,
+              bestSec: data.bestSec || null
+            };
+          }
+        } catch(e) { /* 無視 */ }
+      }
+    });
+  }
+  return prog;
+}
+
 function fmtT(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
 function progressKey(catId, unitIdx){ return catId+'_'+unitIdx; }
 
@@ -8182,7 +8217,8 @@ function unitFile(catId, unitIdx){
 }
 
 function render(){
-  const prog = lsGet(LS_PROGRESS) || {};
+  // 各単元ファイルから進捗を集約して読み込む（新しい方式）
+  const prog = loadAllProgress();
   document.getElementById('streakNum').textContent = updateStreak();
 
   const totalUnits = TANGO_DATA.reduce((a,c)=>a+c.unitCount,0);
