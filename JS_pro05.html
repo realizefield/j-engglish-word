@@ -166,7 +166,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
 <div class="mute-bar">
   <div class="mute-wrap" id="muteWrap">
     <span id="muteLabel">🔊 音声ON</span>
-    <div class="mute-track on" id="muteTrack"><div class="mute-thumb"></div></div>
+    <div class="mute-track" id="muteTrack"><div class="mute-thumb"></div></div>
   </div>
 </div>
 <div class="timer-row">
@@ -177,7 +177,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
 <div id="step0" style="display:none;">
   <div class="wordlist-wrap">
     <div class="wordlist-title">
-      <h2>今週の単語　10語</h2>
+      <h2>今週の単語　8語</h2>
       <p>⭐をタップして気になる単語にチェック！</p>
     </div>
     <div class="check-all-bar">
@@ -305,18 +305,6 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
   <button class="btn btn-next" id="btnNext">フラッシュカードへ →</button>
 </div>
 <script>
-const WORDS=[
-  {no:41,en:'any',kana:'【エ】ニー',pos:'不定代名詞',ja:'いくつか（疑問・否定）'},
-  {no:42,en:'none',kana:'ナン',pos:'不定代名詞',ja:'何も～ない'},
-  {no:43,en:'all',kana:'オール',pos:'不定代名詞',ja:'すべて'},
-  {no:44,en:'both',kana:'ボウス',pos:'不定代名詞',ja:'両方'},
-  {no:45,en:'each',kana:'イーチ',pos:'不定代名詞',ja:'それぞれ'},
-  {no:46,en:'every',kana:'【エ】ブリー',pos:'不定代名詞',ja:'すべての'},
-  {no:47,en:'everyone',kana:'【エ】ブリーワン',pos:'不定代名詞',ja:'みんな'},
-  {no:48,en:'everything',kana:'【エ】ブリーシング',pos:'不定代名詞',ja:'すべてのもの'},
-  {no:49,en:'everybody',kana:'【エ】ブリーバディ',pos:'不定代名詞',ja:'みんな'},
-  {no:50,en:'someone',kana:'【サム】ワン',pos:'不定代名詞',ja:'誰か'}
-];
 function checkAll(v){
   WORDS.forEach((w,i)=>{
     saveStar(w.en,v);
@@ -327,6 +315,16 @@ function checkAll(v){
   });
 }
 
+const WORDS=[
+  {no:28,en:'this',kana:'ディス',pos:'代名詞',ja:'これ'},
+  {no:29,en:'that',kana:'ザット',pos:'代名詞',ja:'あれ'},
+  {no:30,en:'these',kana:'ディーズ',pos:'代名詞',ja:'これら'},
+  {no:31,en:'those',kana:'ゾウズ',pos:'代名詞',ja:'あれら'},
+  {no:32,en:'myself',kana:'マイ【セルフ】',pos:'代名詞',ja:'私自身'},
+  {no:33,en:'yourself',kana:'ユア【セルフ】',pos:'代名詞',ja:'あなた自身'},
+  {no:34,en:'himself',kana:'ヒム【セルフ】',pos:'代名詞',ja:'彼自身'},
+  {no:35,en:'herself',kana:'ハー【セルフ】',pos:'代名詞',ja:'彼女自身'}
+];
 const LS_KEY_PROG='JS_pro05_p', LS_KEY_REVIEW='JS_pro05_r', LS_KEY_STAR='star_JS_pro05';
 const lsGet=k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){try{const v=sessionStorage.getItem(k);return v?JSON.parse(v):null;}catch(e2){return null;}}};
 const lsSet=(k,v)=>{const s=JSON.stringify(v);try{localStorage.setItem(k,s);}catch(e){try{sessionStorage.setItem(k,s);}catch(e2){console.warn('storage error',k,e2);}}};
@@ -381,7 +379,7 @@ function speak(t){
   synth.speak(u);
 }
 function speakIfOn(t){if(!isMuted)speak(t);}
-document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',!isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
+document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
 function makeSpeakBtn(t){const b=document.createElement('button');b.className='speak-btn';b.innerHTML='<svg viewBox="0 0 24 24" fill="white" width="17" height="17"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';b.onclick=()=>speakIfOn(t);return b;}
 let currentStep=0;
 const STEP_LABELS=['単語一覧','STEP1:フラッシュ','STEP2:語群タップ','STEP3:四択','STEP4:つづり四択'];

@@ -166,7 +166,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
 <div class="mute-bar">
   <div class="mute-wrap" id="muteWrap">
     <span id="muteLabel">🔊 音声ON</span>
-    <div class="mute-track on" id="muteTrack"><div class="mute-thumb"></div></div>
+    <div class="mute-track" id="muteTrack"><div class="mute-thumb"></div></div>
   </div>
 </div>
 <div class="timer-row">
@@ -305,18 +305,6 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
   <button class="btn btn-next" id="btnNext">フラッシュカードへ →</button>
 </div>
 <script>
-const WORDS=[
-  {no:11,en:'science',kana:'【サイ】エンス',pos:'名詞',ja:'理科'},
-  {no:12,en:'English',kana:'【イング】リッシュ',pos:'名詞',ja:'英語'},
-  {no:13,en:'Japanese',kana:'ジャパ【ニーズ】',pos:'名詞',ja:'国語'},
-  {no:14,en:'history',kana:'【ヒス】トリー',pos:'名詞',ja:'歴史'},
-  {no:15,en:'music',kana:'【ミュー】ジック',pos:'名詞',ja:'音楽'},
-  {no:16,en:'art',kana:'アート',pos:'名詞',ja:'美術'},
-  {no:17,en:'P.E.',kana:'ピーイー',pos:'名詞',ja:'体育'},
-  {no:18,en:'homework',kana:'【ホウム】ワーク',pos:'名詞',ja:'宿題'},
-  {no:19,en:'textbook',kana:'【テキスト】ブック',pos:'名詞',ja:'教科書'},
-  {no:20,en:'notebook',kana:'【ノウト】ブック',pos:'名詞',ja:'ノート'}
-];
 function checkAll(v){
   WORDS.forEach((w,i)=>{
     saveStar(w.en,v);
@@ -327,6 +315,18 @@ function checkAll(v){
   });
 }
 
+const WORDS=[
+  {no:11,en:'school',kana:'スクール',pos:'名詞',ja:'学校'},
+  {no:12,en:'library',kana:'【ライ】ブラリー',pos:'名詞',ja:'図書館'},
+  {no:13,en:'gym',kana:'ジム',pos:'名詞',ja:'体育館'},
+  {no:14,en:'playground',kana:'【プレイ】グラウンド',pos:'名詞',ja:'校庭'},
+  {no:15,en:'cafeteria',kana:'カフェ【ティア】リア',pos:'名詞',ja:'食堂'},
+  {no:16,en:'office',kana:'【オ】フィス',pos:'名詞',ja:'職員室、事務所'},
+  {no:17,en:'hallway',kana:'【ホール】ウェイ',pos:'名詞',ja:'廊下'},
+  {no:18,en:'locker',kana:'【ロ】カー',pos:'名詞',ja:'ロッカー'},
+  {no:19,en:'restroom',kana:'【レスト】ルーム',pos:'名詞',ja:'トイレ'},
+  {no:20,en:'entrance',kana:'【エン】トランス',pos:'名詞',ja:'入り口'}
+];
 const LS_KEY_PROG='JS_sc02_p', LS_KEY_REVIEW='JS_sc02_r', LS_KEY_STAR='star_JS_sc02';
 const lsGet=k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){try{const v=sessionStorage.getItem(k);return v?JSON.parse(v):null;}catch(e2){return null;}}};
 const lsSet=(k,v)=>{const s=JSON.stringify(v);try{localStorage.setItem(k,s);}catch(e){try{sessionStorage.setItem(k,s);}catch(e2){console.warn('storage error',k,e2);}}};
@@ -381,7 +381,7 @@ function speak(t){
   synth.speak(u);
 }
 function speakIfOn(t){if(!isMuted)speak(t);}
-document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',!isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
+document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
 function makeSpeakBtn(t){const b=document.createElement('button');b.className='speak-btn';b.innerHTML='<svg viewBox="0 0 24 24" fill="white" width="17" height="17"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';b.onclick=()=>speakIfOn(t);return b;}
 let currentStep=0;
 const STEP_LABELS=['単語一覧','STEP1:フラッシュ','STEP2:語群タップ','STEP3:四択','STEP4:つづり四択'];

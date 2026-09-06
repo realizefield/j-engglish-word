@@ -166,7 +166,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
 <div class="mute-bar">
   <div class="mute-wrap" id="muteWrap">
     <span id="muteLabel">🔊 音声ON</span>
-    <div class="mute-track on" id="muteTrack"><div class="mute-thumb"></div></div>
+    <div class="mute-track" id="muteTrack"><div class="mute-thumb"></div></div>
   </div>
 </div>
 <div class="timer-row">
@@ -305,18 +305,6 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
   <button class="btn btn-next" id="btnNext">フラッシュカードへ →</button>
 </div>
 <script>
-const WORDS=[
-  {no:21,en:'thirty',kana:'【サー】ティ',pos:'名詞',ja:'30'},
-  {no:22,en:'forty',kana:'【フォー】ティ',pos:'名詞',ja:'40'},
-  {no:23,en:'fifty',kana:'【フィフ】ティ',pos:'名詞',ja:'50'},
-  {no:24,en:'sixty',kana:'【シック】スティ',pos:'名詞',ja:'60'},
-  {no:25,en:'seventy',kana:'【セ】ブンティ',pos:'名詞',ja:'70'},
-  {no:26,en:'eighty',kana:'【エイ】ティ',pos:'名詞',ja:'80'},
-  {no:27,en:'ninety',kana:'【ナイン】ティ',pos:'名詞',ja:'90'},
-  {no:28,en:'hundred',kana:'【ハン】ドレッド',pos:'名詞',ja:'100'},
-  {no:29,en:'thousand',kana:'【サウ】ザンド',pos:'名詞',ja:'1,000'},
-  {no:30,en:'million',kana:'【ミ】リオン',pos:'名詞',ja:'100万'}
-];
 function checkAll(v){
   WORDS.forEach((w,i)=>{
     saveStar(w.en,v);
@@ -327,6 +315,18 @@ function checkAll(v){
   });
 }
 
+const WORDS=[
+  {no:21,en:'thirty',kana:'【サー】ティー',pos:'数詞',ja:'30'},
+  {no:22,en:'forty',kana:'【フォー】ティー',pos:'数詞',ja:'40'},
+  {no:23,en:'fifty',kana:'【フィフ】ティー',pos:'数詞',ja:'50'},
+  {no:24,en:'sixty',kana:'【シックス】ティー',pos:'数詞',ja:'60'},
+  {no:25,en:'seventy',kana:'【セブン】ティー',pos:'数詞',ja:'70'},
+  {no:26,en:'eighty',kana:'【エイ】ティー',pos:'数詞',ja:'80'},
+  {no:27,en:'ninety',kana:'【ナイン】ティー',pos:'数詞',ja:'90'},
+  {no:28,en:'hundred',kana:'【ハン】ドレッド',pos:'数詞',ja:'100'},
+  {no:29,en:'thousand',kana:'【サウ】ザンド',pos:'数詞',ja:'1000'},
+  {no:30,en:'million',kana:'【ミ】リオン',pos:'数詞',ja:'100万'}
+];
 const LS_KEY_PROG='JS_ns03_p', LS_KEY_REVIEW='JS_ns03_r', LS_KEY_STAR='star_JS_ns03';
 const lsGet=k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){try{const v=sessionStorage.getItem(k);return v?JSON.parse(v):null;}catch(e2){return null;}}};
 const lsSet=(k,v)=>{const s=JSON.stringify(v);try{localStorage.setItem(k,s);}catch(e){try{sessionStorage.setItem(k,s);}catch(e2){console.warn('storage error',k,e2);}}};
@@ -381,7 +381,7 @@ function speak(t){
   synth.speak(u);
 }
 function speakIfOn(t){if(!isMuted)speak(t);}
-document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',!isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
+document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
 function makeSpeakBtn(t){const b=document.createElement('button');b.className='speak-btn';b.innerHTML='<svg viewBox="0 0 24 24" fill="white" width="17" height="17"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';b.onclick=()=>speakIfOn(t);return b;}
 let currentStep=0;
 const STEP_LABELS=['単語一覧','STEP1:フラッシュ','STEP2:語群タップ','STEP3:四択','STEP4:つづり四択'];

@@ -166,7 +166,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
 <div class="mute-bar">
   <div class="mute-wrap" id="muteWrap">
     <span id="muteLabel">🔊 音声ON</span>
-    <div class="mute-track on" id="muteTrack"><div class="mute-thumb"></div></div>
+    <div class="mute-track" id="muteTrack"><div class="mute-thumb"></div></div>
   </div>
 </div>
 <div class="timer-row">
@@ -177,7 +177,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
 <div id="step0" style="display:none;">
   <div class="wordlist-wrap">
     <div class="wordlist-title">
-      <h2>今週の単語　9語</h2>
+      <h2>今週の単語　8語</h2>
       <p>⭐をタップして気になる単語にチェック！</p>
     </div>
     <div class="check-all-bar">
@@ -225,7 +225,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
       <div class="flash-kana" id="flashKana">-</div>
       <div class="flash-ja" id="flashJa" style="display:none;">-</div>
       <div class="flash-pos" id="flashPos"></div>
-      <div class="flash-counter" id="flashCounter">1 / 9</div>
+      <div class="flash-counter" id="flashCounter">1 / 10</div>
       <div class="flash-progress"><div class="flash-bar" id="flashBar" style="width:10%"></div></div>
       <div class="pause-overlay" id="pauseOverlay">
         <div class="po-icon">⏸</div>
@@ -260,7 +260,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
     <div class="quiz-card">
       <div id="qSpeakWrap" style="display:flex;justify-content:center;margin-bottom:8px;"></div>
       <div class="quiz-q" id="quizQ">-</div><div class="quiz-qkana" id="quizQkana"></div>
-      <div class="quiz-num" id="quizNum">1/9</div>
+      <div class="quiz-num" id="quizNum">1/10</div>
     </div>
     <div class="choices" id="choices"></div>
     <div class="quiz-result" id="quizResult"></div>
@@ -278,7 +278,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
     <div class="spell-card">
       <div id="spSpeakWrap" style="display:flex;justify-content:center;margin-bottom:7px;"></div>
       <div class="spell-ja" id="spellJa">-</div><div class="spell-kana" id="spellKana">-</div>
-      <div class="spell-num" id="spellNum">1/9</div>
+      <div class="spell-num" id="spellNum">1/10</div>
     </div>
     <div class="spell-choices" id="spellChoices"></div>
     <div class="spell-result" id="spellResult"></div>
@@ -305,17 +305,6 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
   <button class="btn btn-next" id="btnNext">フラッシュカードへ →</button>
 </div>
 <script>
-const WORDS=[
-  {no:51,en:'something',kana:'【サム】シング',pos:'不定代名詞',ja:'何か'},
-  {no:52,en:'somebody',kana:'【サム】バディ',pos:'不定代名詞',ja:'誰か'},
-  {no:53,en:'anyone',kana:'【エ】ニーワン',pos:'不定代名詞',ja:'誰でも'},
-  {no:54,en:'anything',kana:'【エ】ニーシング',pos:'不定代名詞',ja:'何でも'},
-  {no:55,en:'nobody',kana:'【ノウ】バディ',pos:'不定代名詞',ja:'誰もいない'},
-  {no:56,en:'nothing',kana:'【ナ】シング',pos:'不定代名詞',ja:'何も～ない'},
-  {no:57,en:'another',kana:'アナザー',pos:'不定代名詞',ja:'別の、もう一つの'},
-  {no:58,en:'other',kana:'【ア】ザー',pos:'不定代名詞',ja:'他の'},
-  {no:59,en:'others',kana:'【ア】ザーズ',pos:'不定代名詞',ja:'他のもの'}
-];
 function checkAll(v){
   WORDS.forEach((w,i)=>{
     saveStar(w.en,v);
@@ -326,6 +315,16 @@ function checkAll(v){
   });
 }
 
+const WORDS=[
+  {no:36,en:'itself',kana:'イット【セルフ】',pos:'代名詞',ja:'それ自身'},
+  {no:37,en:'ourselves',kana:'アウア【セルヴズ】',pos:'代名詞',ja:'私たち自身'},
+  {no:38,en:'yourselves',kana:'ユア【セルヴズ】',pos:'代名詞',ja:'あなたたち自身'},
+  {no:39,en:'themselves',kana:'ゼム【セルヴズ】',pos:'代名詞',ja:'彼ら自身'},
+  {no:40,en:'someone',kana:'【サム】ワン',pos:'代名詞',ja:'誰か'},
+  {no:41,en:'everyone',kana:'【エヴリ】ワン',pos:'代名詞',ja:'みんな、誰でも'},
+  {no:42,en:'something',kana:'【サム】シング',pos:'代名詞',ja:'何か'},
+  {no:43,en:'everything',kana:'【エヴリ】シング',pos:'代名詞',ja:'すべてのもの'}
+];
 const LS_KEY_PROG='JS_pro06_p', LS_KEY_REVIEW='JS_pro06_r', LS_KEY_STAR='star_JS_pro06';
 const lsGet=k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){try{const v=sessionStorage.getItem(k);return v?JSON.parse(v):null;}catch(e2){return null;}}};
 const lsSet=(k,v)=>{const s=JSON.stringify(v);try{localStorage.setItem(k,s);}catch(e){try{sessionStorage.setItem(k,s);}catch(e2){console.warn('storage error',k,e2);}}};
@@ -380,7 +379,7 @@ function speak(t){
   synth.speak(u);
 }
 function speakIfOn(t){if(!isMuted)speak(t);}
-document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',!isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
+document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
 function makeSpeakBtn(t){const b=document.createElement('button');b.className='speak-btn';b.innerHTML='<svg viewBox="0 0 24 24" fill="white" width="17" height="17"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';b.onclick=()=>speakIfOn(t);return b;}
 let currentStep=0;
 const STEP_LABELS=['単語一覧','STEP1:フラッシュ','STEP2:語群タップ','STEP3:四択','STEP4:つづり四択'];

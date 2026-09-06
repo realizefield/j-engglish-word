@@ -166,7 +166,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
 <div class="mute-bar">
   <div class="mute-wrap" id="muteWrap">
     <span id="muteLabel">🔊 音声ON</span>
-    <div class="mute-track on" id="muteTrack"><div class="mute-thumb"></div></div>
+    <div class="mute-track" id="muteTrack"><div class="mute-thumb"></div></div>
   </div>
 </div>
 <div class="timer-row">
@@ -305,18 +305,6 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
   <button class="btn btn-next" id="btnNext">フラッシュカードへ →</button>
 </div>
 <script>
-const WORDS=[
-  {no:41,en:'club',kana:'クラブ',pos:'名詞',ja:'部活'},
-  {no:42,en:'activity',kana:'アク【ティ】ビティ',pos:'名詞',ja:'活動'},
-  {no:43,en:'junior high school',kana:'ジュニアハイスクール',pos:'名詞',ja:'中学校'},
-  {no:44,en:'high school',kana:'ハイスクール',pos:'名詞',ja:'高校'},
-  {no:45,en:'elementary school',kana:'エレ【メン】タリースクール',pos:'名詞',ja:'小学校'},
-  {no:46,en:'kindergarten',kana:'【キン】ダーガーテン',pos:'名詞',ja:'幼稚園'},
-  {no:47,en:'university',kana:'ユニ【バー】シティ',pos:'名詞',ja:'大学'},
-  {no:48,en:'grade',kana:'グレイド',pos:'名詞',ja:'成績、学年'},
-  {no:49,en:'pen',kana:'ペン',pos:'名詞',ja:'ペン'},
-  {no:50,en:'pencil',kana:'【ペン】スル',pos:'名詞',ja:'鉛筆'}
-];
 function checkAll(v){
   WORDS.forEach((w,i)=>{
     saveStar(w.en,v);
@@ -327,6 +315,18 @@ function checkAll(v){
   });
 }
 
+const WORDS=[
+  {no:41,en:'school trip',kana:'スクール【トリップ】',pos:'名詞',ja:'校外学習、遠足'},
+  {no:42,en:'sports day',kana:'ス【ポーツ】デイ',pos:'名詞',ja:'運動会'},
+  {no:43,en:'cultural festival',kana:'【カル】チュラルフェスティバル',pos:'名詞',ja:'文化祭'},
+  {no:44,en:'entrance ceremony',kana:'【エン】トランスセレモニー',pos:'名詞',ja:'入学式'},
+  {no:45,en:'graduation ceremony',kana:'グラジュエイション【セレ】モニー',pos:'名詞',ja:'卒業式'},
+  {no:46,en:'summer vacation',kana:'【サマー】ヴェイケイション',pos:'名詞',ja:'夏休み'},
+  {no:47,en:'club activity',kana:'クラブ アク【ティ】ヴィティー',pos:'名詞',ja:'部活動'},
+  {no:48,en:'homeroom',kana:'【ホウム】ルーム',pos:'名詞',ja:'ホームルーム'},
+  {no:49,en:'assembly',kana:'ア【センブ】リー',pos:'名詞',ja:'集会'},
+  {no:50,en:'schedule',kana:'ス【ケ】ジュール',pos:'名詞',ja:'時間割、予定'}
+];
 const LS_KEY_PROG='JS_sc05_p', LS_KEY_REVIEW='JS_sc05_r', LS_KEY_STAR='star_JS_sc05';
 const lsGet=k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){try{const v=sessionStorage.getItem(k);return v?JSON.parse(v):null;}catch(e2){return null;}}};
 const lsSet=(k,v)=>{const s=JSON.stringify(v);try{localStorage.setItem(k,s);}catch(e){try{sessionStorage.setItem(k,s);}catch(e2){console.warn('storage error',k,e2);}}};
@@ -381,7 +381,7 @@ function speak(t){
   synth.speak(u);
 }
 function speakIfOn(t){if(!isMuted)speak(t);}
-document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',!isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
+document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
 function makeSpeakBtn(t){const b=document.createElement('button');b.className='speak-btn';b.innerHTML='<svg viewBox="0 0 24 24" fill="white" width="17" height="17"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';b.onclick=()=>speakIfOn(t);return b;}
 let currentStep=0;
 const STEP_LABELS=['単語一覧','STEP1:フラッシュ','STEP2:語群タップ','STEP3:四択','STEP4:つづり四択'];

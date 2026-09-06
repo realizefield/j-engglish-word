@@ -34,6 +34,9 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
 .unit-dot:hover{border-color:#4472C4;color:#4472C4;transform:scale(1.1);}
 .unit-dot.cleared{background:linear-gradient(135deg,#22a06b,#145e3e);border-color:#22a06b;color:white;}
 .unit-dot.best{background:linear-gradient(135deg,#E36C09,#c45400);border-color:#E36C09;color:white;}
+.cat-pdf-row{display:flex;justify-content:flex-end;margin-top:8px;}
+.cat-pdf-btn{font-size:0.72rem;background:linear-gradient(135deg,#4472C4,#17375E);color:white;border:none;border-radius:14px;padding:5px 12px;font-weight:bold;cursor:pointer;display:flex;align-items:center;gap:4px;}
+.cat-pdf-btn:hover{opacity:0.9;}
 </style>
 </head>
 <body>
@@ -8216,6 +8219,13 @@ function unitFile(catId, unitIdx){
   return 'JS_' + abbr + String(unitIdx+1).padStart(2,'0') + '.html';
 }
 
+// ===== プリントPDFが用意済みのカテゴリ（増えたらここに追加） =====
+const PDF_READY = new Set(['ew','ns','sw','en','an','sp','fd','sc','hh','fm','tr','to','jb','adj','adv','conj','rv','irv','cmp','pro','qw']);
+function pdfFile(catId){
+  const abbr = CAT_ABBR[catId] || catId;
+  return 'pdf/' + abbr + '.pdf';
+}
+
 function render(){
   // 各単元ファイルから進捗を集約して読み込む（新しい方式）
   const prog = loadAllProgress();
@@ -8242,11 +8252,25 @@ function render(){
       ? '<span class="cat-badge done-all">✅ 完了</span>'
       : '<span class="cat-badge">'+doneCat+'/'+cat.unitCount+' 単元</span>';
 
+    const pdfReady = PDF_READY.has(CAT_ABBR[cat.id]);
+    const pdfRow = pdfReady
+      ? '<div class="cat-pdf-row"><button class="cat-pdf-btn" id="pdfbtn_'+cat.id+'">📄 プリントPDF（全'+cat.unitCount+'単元）</button></div>'
+      : '';
+
     card.innerHTML =
       '<div class="cat-head"><span class="cat-name">'+cat.id+'. '+cat.name+'</span>'+badge+'</div>'+
       '<div class="cat-progress-wrap"><div class="cat-progress" style="width:'+pct+'%"></div></div>'+
-      '<div class="cat-units" id="units_'+cat.id+'"></div>';
+      '<div class="cat-units" id="units_'+cat.id+'"></div>'+
+      pdfRow;
     list.appendChild(card);
+
+    if(pdfReady){
+      const pdfBtn = card.querySelector('#pdfbtn_'+cat.id);
+      pdfBtn.addEventListener('click', e=>{
+        e.stopPropagation();
+        window.open(pdfFile(cat.id), '_blank');
+      });
+    }
 
     const unitsDiv = card.querySelector('#units_'+cat.id);
     for(let i=0;i<cat.unitCount;i++){

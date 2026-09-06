@@ -166,7 +166,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
 <div class="mute-bar">
   <div class="mute-wrap" id="muteWrap">
     <span id="muteLabel">🔊 音声ON</span>
-    <div class="mute-track on" id="muteTrack"><div class="mute-thumb"></div></div>
+    <div class="mute-track" id="muteTrack"><div class="mute-thumb"></div></div>
   </div>
 </div>
 <div class="timer-row">
@@ -305,18 +305,6 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f4f8;min-height
   <button class="btn btn-next" id="btnNext">フラッシュカードへ →</button>
 </div>
 <script>
-const WORDS=[
-  {no:81,en:'discover',kana:'ディス【カ】バー',pos:'動詞',ja:'発見する  → discovered'},
-  {no:82,en:'invent',kana:'イン【ベント】',pos:'動詞',ja:'発明する  → invented'},
-  {no:83,en:'develop',kana:'ディ【ベ】ロップ',pos:'動詞',ja:'発展する  → developed'},
-  {no:84,en:'succeed',kana:'サク【シード】',pos:'動詞',ja:'成功する  → succeeded'},
-  {no:85,en:'fail',kana:'フェイル',pos:'動詞',ja:'失敗する  → failed'},
-  {no:86,en:'damage',kana:'【ダ】メージ',pos:'動詞',ja:'損傷する  → damaged'},
-  {no:87,en:'repair',kana:'リ【ペア】',pos:'動詞',ja:'修理する  → repaired'},
-  {no:88,en:'save',kana:'セイブ',pos:'動詞',ja:'救う  → saved'},
-  {no:89,en:'marry',kana:'【マ】リー',pos:'動詞',ja:'結婚する  → married'},
-  {no:90,en:'travel',kana:'【トラ】ベル',pos:'動詞',ja:'旅行する  → traveled'}
-];
 function checkAll(v){
   WORDS.forEach((w,i)=>{
     saveStar(w.en,v);
@@ -327,6 +315,18 @@ function checkAll(v){
   });
 }
 
+const WORDS=[
+  {no:81,en:'save',kana:'セイブ',pos:'動詞',ja:'救う、貯める  → saved'},
+  {no:82,en:'add',kana:'アッド',pos:'動詞',ja:'加える  → added'},
+  {no:83,en:'cover',kana:'【カ】バー',pos:'動詞',ja:'覆う  → covered'},
+  {no:84,en:'follow',kana:'【フォ】ロウ',pos:'動詞',ja:'従う、ついていく  → followed'},
+  {no:85,en:'join',kana:'ジョイン',pos:'動詞',ja:'参加する  → joined'},
+  {no:86,en:'allow',kana:'ア【ラウ】',pos:'動詞',ja:'許す  → allowed'},
+  {no:87,en:'enter',kana:'【エン】ター',pos:'動詞',ja:'入る  → entered'},
+  {no:88,en:'order',kana:'【オー】ダー',pos:'動詞',ja:'注文する  → ordered'},
+  {no:89,en:'offer',kana:'【オ】ファー',pos:'動詞',ja:'提供する  → offered'},
+  {no:90,en:'promise',kana:'【プラ】ミス',pos:'動詞',ja:'約束する  → promised'}
+];
 const LS_KEY_PROG='JS_rv09_p', LS_KEY_REVIEW='JS_rv09_r', LS_KEY_STAR='star_JS_rv09';
 const lsGet=k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){try{const v=sessionStorage.getItem(k);return v?JSON.parse(v):null;}catch(e2){return null;}}};
 const lsSet=(k,v)=>{const s=JSON.stringify(v);try{localStorage.setItem(k,s);}catch(e){try{sessionStorage.setItem(k,s);}catch(e2){console.warn('storage error',k,e2);}}};
@@ -381,7 +381,7 @@ function speak(t){
   synth.speak(u);
 }
 function speakIfOn(t){if(!isMuted)speak(t);}
-document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',!isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
+document.getElementById('muteWrap').addEventListener('click',()=>{isMuted=!isMuted;document.getElementById('muteTrack').classList.toggle('on',isMuted);document.getElementById('muteLabel').textContent=isMuted?'🔇 音声OFF':'🔊 音声ON';if(isMuted)synth.cancel();});
 function makeSpeakBtn(t){const b=document.createElement('button');b.className='speak-btn';b.innerHTML='<svg viewBox="0 0 24 24" fill="white" width="17" height="17"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';b.onclick=()=>speakIfOn(t);return b;}
 let currentStep=0;
 const STEP_LABELS=['単語一覧','STEP1:フラッシュ','STEP2:語群タップ','STEP3:四択','STEP4:つづり四択'];
